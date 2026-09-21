@@ -1,0 +1,14 @@
+<h2><%= l(:label_rtm_project_teams) %></h2>
+<div class="info"><%= l(:text_rtm_roleless_team_assignment) %></div>
+<% if User.current.admin? || User.current.allowed_to?(:manage_project_teams, @project) %>
+<%= form_tag project_rtm_project_teams_path(@project), method: :post do %>
+<div class="box">
+  <label><%= l(:label_rtm_link_team) %></label>
+  <%= select_tag :team_id, options_from_collection_for_select(@available_teams, :id, :name), include_blank: true, required: true %>
+  <%= submit_tag l(:button_add) %>
+</div>
+<% end %>
+<% end %>
+<table class="list odd-even"><thead><tr><th><%= l(:label_rtm_team) %></th><th><%= l(:label_rtm_team_members) %></th><th><%= l(:label_rtm_last_sync) %></th><th></th></tr></thead><tbody>
+<% @project_teams.each do |pt| %><tr class="<%= cycle('odd','even') %>"><td><%= link_to pt.team.name, project_rtm_project_team_path(@project, pt) %></td><td><%= pt.team.team_members.size %></td><td><%= pt.last_synced_at ? format_time(pt.last_synced_at) : l(:label_rtm_never) %></td><td class="buttons"><%= link_to l(:label_rtm_preview), project_rtm_project_team_path(@project, pt), class: 'icon icon-magnifier' %></td></tr><% end %>
+</tbody></table>

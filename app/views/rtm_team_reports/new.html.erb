@@ -1,0 +1,33 @@
+<%= stylesheet_link_tag 'redmine_team_manager', plugin: 'redmine_team_manager' %>
+<%= javascript_include_tag 'rtm_multiselect', plugin: 'redmine_team_manager' %>
+
+<div class="contextual">
+  <%= link_to l(:button_back), rtm_teams_path, class: 'icon icon-cancel' %>
+</div>
+
+<h2><%= l(:label_rtm_generate_report) %></h2>
+
+<%= form_tag rtm_team_report_path, method: :post do %>
+  <div class="box tabular">
+    <p>
+      <%= label_tag :project_id, l(:label_project) %>
+      <%= select_tag :project_id,
+                     options_from_collection_for_select(@projects, :id, :name, @project_id.to_i),
+                     include_blank: true,
+                     required: true,
+                     class: 'rtm-searchable-select',
+                     data: {
+                       placeholder: l(:label_rtm_report_project_placeholder),
+                       search_placeholder: l(:label_rtm_report_project_placeholder),
+                       no_results: l(:label_rtm_project_no_results)
+                     } %>
+    </p>
+    <p>
+      <%= label_tag :page_title, l(:label_rtm_report_wiki_page) %>
+      <%= text_field_tag :page_title, @page_title, size: 60, required: true %>
+      <em class="info"><%= l(:text_rtm_report_page_help) %></em>
+    </p>
+  </div>
+
+  <%= submit_tag l(:button_rtm_generate_report) %>
+<% end %>

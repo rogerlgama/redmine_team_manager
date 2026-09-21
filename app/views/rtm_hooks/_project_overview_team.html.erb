@@ -1,0 +1,103 @@
+<%
+  project = local_assigns[:project] || @project
+  overview_teams = []
+
+  if project && defined?(RtmProjectTeam) && defined?(RtmTeamMember)
+    project_teams = RtmProjectTeam.
+      includes(team: {team_members: :user}).
+      where(project_id: project.id, active: true).
+      to_a.
+      select { |project_team| project_team.team && project_team.team.active? }.
+      sort_by { |project_team| project_team.team.name.to_s.downcase }
+
+    overview_teams = project_teams.filter_map do |project_team|
+      team = project_team.team
+      users = team.team_members.
+        map(&:user).
+        compact.
+        select(&:active?).
+        uniq(&:id).
+        sort
+
+      next if users.empty?
+
+      [team, users]
+    end
+  end
+%>
+
+<% if overview_teams.any? %>
+  <template id="rtm-overview-team-members-template">
+    <% overview_teams.each do |team, users| %>
+      <p class="rtm-overview-team-members">
+        <strong><%= "#{l(:label_rtm_overview_team)} #{team.name}" %>:</strong>
+        <%= users.map { |user| link_to_principal(user) }.join(', ').html_safe %>
+      </p>
+    <% end %>
+  </template>
+
+  <script>
+    (function() {
+      function insertRtmTeamMembers() {
+        var membersBox = document.querySelector('.members.box');
+        var template = document.getElementById('rtm-overview-team-members-template');
+        if (!membersBox || !template) return;
+
+        var existing = membersBox.querySelector('.rtm-overview-team-members');
+        if (existing) {
+          template.remove();
+          return;
+        }
+
+        var heading = membersBox.querySelector('h3');
+        var fragment = template.content.cloneNode(true);
+        if (heading && heading.nextSibling) {
+          membersBox.insertBefore(fragment, heading.nextSibling);
+        } else if (heading) {
+          membersBox.appendChild(fragment);
+        } else {
+          membersBox.insertBefore(fragment, membersBox.firstChild);
+        }
+        template.remove();
+
+        // Os perfis nativos do Redmine permanecem logo abaixo do(s) Time(s),
+        // mas passam a usar a mesma leitura visual de lista indentada presente
+        // em outros blocos da Visão Geral (ex.: Registro de horas).
+        var roleParagraphs = Array.prototype.filter.call(
+          membersBox.querySelectorAll(':scope > p'),
+          function(paragraph) {
+            return !paragraph.classList.contains('rtm-overview-team-members');
+          }
+        );
+
+        if (roleParagraphs.length && !membersBox.querySelector(':scope > ul.rtm-overview-role-list')) {
+          var roleList = document.createElement('ul');
+          roleList.className = 'rtm-overview-role-list';
+
+          roleParagraphs.forEach(function(paragraph) {
+            var item = document.createElement('li');
+            while (paragraph.firstChild) {
+              item.appendChild(paragraph.firstChild);
+            }
+            roleList.appendChild(item);
+            paragraph.remove();
+          });
+
+          var teamLines = membersBox.querySelectorAll(':scope > p.rtm-overview-team-members');
+          var lastTeamLine = teamLines.length ? teamLines[teamLines.length - 1] : heading;
+          if (lastTeamLine && lastTeamLine.nextSibling) {
+            membersBox.insertBefore(roleList, lastTeamLine.nextSibling);
+          } else {
+            membersBox.appendChild(roleList);
+          }
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', insertRtmTeamMembers, { once: true });
+      } else {
+        insertRtmTeamMembers();
+      }
+    })();
+  </script>
+<% end %>

@@ -1,0 +1,44 @@
+h1. Redmine Team Manager
+
+Redmine Team Manager provides centralized management of reusable teams. Each member can receive one or more individual Redmine roles, while the team remains available as a collective issue assignee through a native Redmine group.
+
+h2. Features
+
+* Central team administration
+* Multiple individual roles per team member
+* Team linking to multiple projects
+* Collective issue assignment and native group notifications
+* Technical groups hidden from the native member picker
+* Team members displayed in the project overview
+* Administrator-only JSON API for teams, members and projects
+* Textile team report published to a selected wiki page
+* Searchable user, role and project selectors
+* No Redmine core-file modifications
+
+h2. Requirements
+
+* Redmine 6.0 or newer
+* Validated with Redmine 6.0.6, Ruby 3.3.8, Rails 7.2.2.1 and PostgreSQL
+
+h2. Installation
+
+# Copy the plugin to @REDMINE_ROOT/plugins/redmine_team_manager@.
+# Run @bundle exec rake redmine:plugins:migrate NAME=redmine_team_manager RAILS_ENV=production@.
+# Restart Redmine.
+# Open *Administration → Team Management*.
+
+h2. API
+
+* @GET /api/team_manager/teams.json@
+* @GET /api/team_manager/teams/:id/members.json@
+* @GET /api/team_manager/teams/:id/projects.json@
+
+The API accepts Redmine API authentication and requires an administrator account.
+
+h2. License
+
+GPL-2.0-or-later.
+
+h2. Author
+
+Roger Gama

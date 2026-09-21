@@ -1,0 +1,109 @@
+.rtm-origin {font-size:.9em;opacity:.8}
+.rtm-summary {display:flex;gap:1rem}
+.rtm-summary .box {flex:1}
+
+.rtm-multiselect {position:relative;display:inline-block;width:min(34rem,100%);min-width:18rem;vertical-align:middle}
+.rtm-role-select-native,.rtm-searchable-select-native {position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.rtm-multiselect-control {box-sizing:border-box;width:100%;min-height:30px;padding:4px 28px 4px 8px;text-align:left;background:#fff;border:1px solid #ccc;border-radius:3px;color:#333;cursor:pointer;position:relative;font:inherit}
+.rtm-multiselect-control:hover,.rtm-multiselect-control:focus {border-color:#999;outline:none}
+.rtm-multiselect-summary {display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rtm-multiselect-summary.placeholder {color:#777}
+.rtm-multiselect-arrow {position:absolute;right:8px;top:50%;transform:translateY(-50%);color:#777}
+
+/*
+ * O dropdown é anexado ao <body> e usa position:fixed para ficar acima de
+ * tabelas, boxes e demais containers do Redmine que possam recortar conteúdo.
+ */
+.rtm-multiselect-panel {
+  position:fixed;
+  z-index:100000;
+  box-sizing:border-box;
+  padding:7px;
+  overflow:hidden;
+  background:#fff;
+  border:1px solid #aaa;
+  border-radius:3px;
+  box-shadow:0 5px 18px rgba(0,0,0,.28);
+}
+.rtm-multiselect-panel[hidden] {display:none!important}
+.rtm-multiselect-search {box-sizing:border-box;width:100%;margin:0 0 6px 0!important;padding:5px 7px!important}
+.rtm-multiselect-options {
+  max-height:270px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  border-top:1px solid #eee;
+  scrollbar-gutter:stable;
+}
+.rtm-multiselect-option {display:flex!important;align-items:center;gap:7px;padding:6px 5px;margin:0!important;cursor:pointer;float:none!important;white-space:normal;line-height:1.35}
+.rtm-multiselect-option[hidden] {display:none!important}
+.rtm-multiselect-option:hover {background:#f3f6f8}
+.rtm-multiselect-option input {margin:0!important;flex:0 0 auto}
+.rtm-multiselect-option span {min-width:0;overflow-wrap:anywhere}
+.rtm-multiselect-empty {padding:9px 4px;color:#777;font-style:italic}
+
+#content table.list td .rtm-multiselect {min-width:20rem;max-width:32rem}
+
+@media (max-width:700px) {
+  .rtm-multiselect {min-width:0;width:100%}
+  #content table.list td .rtm-multiselect {min-width:0;max-width:none}
+}
+
+/* Projeto usa o mesmo seletor pesquisável dos papéis, com largura adequada à seção. */
+.rtm-project-select + .rtm-multiselect, .rtm-multiselect:has(.rtm-project-select) {min-width:22rem;max-width:36rem}
+
+.rtm-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.28);
+}
+.rtm-confirm-dialog {
+  width: min(520px, calc(100vw - 40px));
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  box-shadow: 0 5px 24px rgba(0, 0, 0, 0.28);
+}
+.rtm-confirm-dialog p { margin: 0 0 18px; }
+.rtm-confirm-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* Adição de integrante faz parte da própria seção Integrantes. */
+.rtm-add-member-details { margin: .6rem 0 1.2rem; }
+.rtm-add-member-details > summary {
+  display: inline-block;
+  cursor: pointer;
+  color: #169;
+  list-style: none;
+}
+.rtm-add-member-details > summary::-webkit-details-marker { display: none; }
+.rtm-add-member-form { margin-top: .6rem; }
+.rtm-add-member-form .box { margin-bottom: 0; }
+.rtm-add-member-actions { margin-bottom: 0 !important; }
+
+/* Mantém o formulário de salvamento de papéis integrado à coluna de ações. */
+.rtm-inline-form {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Visão geral do projeto: mantém a linha do Time destacada no topo e
+ * apresenta os perfis nativos com recuo e marcador, seguindo a estética
+ * de listas utilizada em outros blocos do Redmine (ex.: Registro de horas). */
+.members.box p:not(.rtm-overview-team-members) {
+  position: relative;
+  margin-left: 1.6rem;
+}
+.members.box p:not(.rtm-overview-team-members)::before {
+  content: "•";
+  position: absolute;
+  left: -1rem;
+  top: 0;
+  color: #333;
+}

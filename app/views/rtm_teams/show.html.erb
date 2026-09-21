@@ -1,0 +1,121 @@
+<%= stylesheet_link_tag 'redmine_team_manager', plugin: 'redmine_team_manager' %>
+<%= javascript_include_tag 'rtm_multiselect', plugin: 'redmine_team_manager' %>
+
+<div class="contextual">
+  <%= link_to l(:button_edit), edit_rtm_team_path(@team), class: 'icon icon-edit' %>
+</div>
+<h2><%= @team.name %></h2>
+<% if @team.description.present? %>
+  <div class="wiki"><%= simple_format h(@team.description) %></div>
+<% end %>
+
+
+<h3><%= l(:label_rtm_team_members) %></h3>
+<table class="list odd-even">
+<thead><tr><th><%= l(:label_user) %></th><th><%= l(:label_rtm_roles) %></th><th></th></tr></thead>
+<tbody>
+<% @team.team_members.includes(:user, :roles).sort_by {|tm| tm.user.name.downcase}.each do |tm| %>
+<% role_form_id = "rtm-member-roles-#{tm.id}" %>
+<tr class="<%= cycle('odd','even') %>">
+  <td><%= link_to_user tm.user %></td>
+  <td>
+    <%= select_tag 'role_ids[]',
+                   options_from_collection_for_select(@roles, :id, :name, tm.role_ids),
+                   multiple: true,
+                   form: role_form_id,
+                   class: 'rtm-role-select',
+                   data: {
+                     placeholder: l(:label_rtm_role_search_placeholder),
+                     search_placeholder: l(:label_rtm_role_search_placeholder),
+                     no_results: l(:label_rtm_role_no_results)
+                   } %>
+  </td>
+  <td class="buttons">
+    <%= form_tag update_member_roles_rtm_team_path(@team, tm), method: :patch, id: role_form_id, class: 'rtm-inline-form' do %>
+      <%= submit_tag l(:button_save), class: 'small' %>
+    <% end %>
+    <%= link_to l(:button_delete), remove_member_rtm_team_path(@team, tm), method: :delete,
+                data: { rtm_member_delete: '1', confirm_message: l(:text_rtm_confirm_remove_member_all_projects), yes_label: l(:general_text_Yes), no_label: l(:general_text_No) },
+                class: 'icon icon-del' %>
+  </td>
+</tr>
+<% end %>
+</tbody></table>
+
+<details class="rtm-add-member-details">
+  <summary class="icon icon-add"><%= l(:label_rtm_add_member) %></summary>
+  <%= form_tag add_member_rtm_team_path(@team), method: :post, class: 'rtm-add-member-form' do %>
+    <div class="box tabular">
+      <p><label><%= l(:label_user) %></label>
+        <%= select_tag :user_id,
+                       options_from_collection_for_select(@users, :id, :name),
+                       include_blank: true,
+                       required: true,
+                       class: 'rtm-searchable-select rtm-user-select',
+                       data: {
+                         placeholder: l(:label_rtm_user_search_placeholder),
+                         search_placeholder: l(:label_rtm_user_search_placeholder),
+                         no_results: l(:label_rtm_user_no_results)
+                       } %>
+      </p>
+      <p><label><%= l(:label_rtm_roles) %></label>
+        <%= select_tag 'role_ids[]',
+                       options_from_collection_for_select(@roles, :id, :name),
+                       multiple: true,
+                       class: 'rtm-role-select',
+                       data: {
+                         placeholder: l(:label_rtm_role_search_placeholder),
+                         search_placeholder: l(:label_rtm_role_search_placeholder),
+                         no_results: l(:label_rtm_role_no_results)
+                       } %>
+      </p>
+      <p class="rtm-add-member-actions"><%= submit_tag l(:button_add), class: 'button-positive' %></p>
+    </div>
+  <% end %>
+</details>
+
+<h3><%= l(:label_project_plural) %></h3>
+
+<div class="box tabular">
+  <h4><%= l(:label_rtm_link_project) %></h4>
+  <% if @available_projects.any? %>
+    <%= form_tag link_project_rtm_team_path(@team), method: :post do %>
+      <p>
+        <label><%= l(:label_project) %></label>
+        <%= select_tag 'project_ids[]',
+                       options_from_collection_for_select(@available_projects, :id, :name),
+                       multiple: true,
+                       class: 'rtm-role-select rtm-project-select',
+                       data: {
+                         placeholder: l(:label_rtm_projects_search_placeholder),
+                         search_placeholder: l(:label_rtm_project_search_placeholder),
+                         no_results: l(:label_rtm_project_no_results)
+                       } %>
+        <%= submit_tag l(:button_add) %>
+      </p>
+    <% end %>
+  <% else %>
+    <p><%= l(:label_rtm_no_available_projects) %></p>
+  <% end %>
+</div>
+
+<h4><%= l(:label_rtm_linked_projects) %></h4>
+<% if @project_teams.any? %>
+<table class="list odd-even">
+  <thead><tr><th><%= l(:label_project) %></th><th><%= l(:label_rtm_last_sync) %></th><th></th></tr></thead>
+  <tbody>
+  <% @project_teams.each do |pt| %>
+    <tr class="<%= cycle('odd','even') %>">
+      <td><%= link_to_project pt.project %></td>
+      <td><%= pt.last_synced_at ? format_time(pt.last_synced_at) : l(:label_rtm_never) %></td>
+      <td class="buttons">
+        <%= link_to l(:label_rtm_unlink), unlink_project_rtm_team_path(@team, project_id: pt.project_id),
+                    method: :delete, data: {confirm: l(:text_are_you_sure)}, class: 'icon icon-del' %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<% else %>
+  <p class="nodata"><%= l(:label_rtm_no_linked_projects) %></p>
+<% end %>

@@ -1,0 +1,21 @@
+<div class="contextual">
+<% if (User.current.admin? || User.current.allowed_to?(:manage_project_teams, @project)) && @project_team.team.active? %>
+  <%= link_to l(:label_rtm_sync), sync_project_rtm_project_team_path(@project, @project_team), method: :post, data: {confirm: l(:text_are_you_sure)}, class: 'icon icon-reload' %>
+  <%= link_to l(:label_rtm_unlink), project_rtm_project_team_path(@project, @project_team), method: :delete, data: {confirm: l(:text_are_you_sure)}, class: 'icon icon-del' %>
+<% end %>
+</div>
+<h2><%= @project_team.team.name %> — <%= @project.name %></h2>
+<% unless @project_team.team.active? %>
+  <p class="warning"><%= l(:text_rtm_team_locked_readonly) %></p>
+<% end %>
+<div class="box">
+<p><strong><%= l(:label_rtm_last_sync) %>:</strong> <%= @project_team.last_synced_at ? format_time(@project_team.last_synced_at) : l(:label_rtm_never) %></p>
+<p><%= l(:text_rtm_roleless_team_assignment) %></p>
+</div>
+<h3><%= l(:label_rtm_preview) %></h3>
+<div class="splitcontent">
+<div class="splitcontentleft"><div class="box"><h4><%= l(:label_rtm_added) %> (<%= @preview.additions.size %>)</h4><ul><% @preview.additions.each do |e| %><li><%= e[:user].name %> — <%= e[:role].name %></li><% end %></ul></div></div>
+<div class="splitcontentright"><div class="box"><h4><%= l(:label_rtm_removed) %> (<%= @preview.removals.size %>)</h4><ul><% @preview.removals.each do |e| %><li><%= e[:user].name %> — <%= e[:role].name %></li><% end %></ul></div></div>
+</div>
+<div class="box"><h4><%= l(:label_rtm_unchanged) %> (<%= @preview.unchanged.size %>)</h4><ul><% @preview.unchanged.each do |e| %><li><%= e[:user].name %> — <%= e[:role].name %></li><% end %></ul></div>
+<% if @preview.warnings.any? %><div class="warning"><strong><%= l(:label_rtm_warnings) %>:</strong><ul><% @preview.warnings.each do |w| %><li><%= w %></li><% end %></ul></div><% end %>

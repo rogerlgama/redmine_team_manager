@@ -1,0 +1,5 @@
+<h2><%= l(:label_rtm_edit_team) %></h2>
+<%= labelled_form_for @team, url: rtm_team_path(@team), method: :patch do |f| %>
+  <%= render partial: 'form', locals: {f: f} %>
+  <%= submit_tag l(:button_save) %>
+<% end %>

@@ -1,0 +1,22 @@
+<div class="contextual">
+  <%= link_to l(:label_rtm_new_team), new_rtm_team_path, class: 'icon icon-add' %>
+  <%= link_to l(:label_rtm_generate_report), new_rtm_team_report_path, class: 'icon icon-report' %>
+</div>
+<h2><%= l(:label_rtm_team_management) %></h2>
+<table class="list teams odd-even">
+  <thead><tr><th><%= l(:field_name) %></th><th><%= l(:label_rtm_team_members) %></th><th><%= l(:label_project_plural) %></th><th></th></tr></thead>
+  <tbody>
+  <% @teams.each do |team| %>
+    <tr class="<%= cycle('odd','even') %>">
+      <td class="name"><%= link_to team.name, rtm_team_path(team) %></td>
+      <td><%= team.team_members.size %></td>
+      <td><%= team.project_teams.size %></td>
+      <td class="buttons">
+        <%= link_to l(:button_copy), copy_rtm_team_path(team), method: :post, class: 'icon icon-copy' %>
+        <%= link_to l(:button_delete), rtm_team_path(team), method: :delete,
+                    data: {confirm: l(:text_are_you_sure)}, class: 'icon icon-del' %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
