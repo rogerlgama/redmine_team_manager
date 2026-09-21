@@ -5,6 +5,7 @@ require_relative 'lib/redmine_team_manager'
 Redmine::Plugin.register :redmine_team_manager do
   name 'Gestão de Times'
   author 'Roger Gama'
+  author_url 'https://github.com/rogerlgama'
   description 'Gerencia times com papéis individuais e atribuição coletiva sem papel-base para o Time.'
   version '0.3.38'
   url 'https://github.com/rogerlgama/redmine_team_manager'
