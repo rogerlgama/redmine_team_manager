@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here.
 
+## 0.3.39
+
+- Include linked teams in Redmine's native **Assigned to** issue filter.
+- Add an `IssueQuery#assigned_to_values` patch without turning the team's technical group into a native project member.
+- Keep the plugin version explicitly displayed in the README files.
+- No new migration is required.
+
 ## 0.3.38
 
 - Prepare the first public release documentation.
