@@ -1,4 +1,4 @@
-# Redmine Team Manager
+# Redmine Team Manager — 0.3.39
 
 Redmine plugin for managing reusable teams, assigning individual roles to each team member, and making the team available as a collective issue assignee.
 
@@ -13,6 +13,7 @@ Portuguese documentation: [README.pt-BR.md](README.pt-BR.md)
 - Team members keep only their individually configured project roles.
 - Technical team groups are hidden from the native project-member picker.
 - Project overview displays the members of each linked team.
+- Linked teams are available in the native **Assigned to** issue filter.
 - JSON API for teams, members, roles, and linked projects.
 - Textile report publishing to a selected Redmine wiki page.
 - Searchable selectors for users, roles, and projects, without external JavaScript dependencies.
@@ -23,7 +24,7 @@ The plugin does not modify Redmine core files.
 
 Each team has a native Redmine group named `[TIME] Team name`. The group provides Redmine's standard collective-assignment and notification behavior, but it is not added to the project as a member and receives no base role.
 
-The plugin links the team to projects separately and adds only linked technical groups to `Issue#assignable_users`. Individual users receive the roles configured for them in the team.
+The plugin links the team to projects separately and adds only linked technical groups to `Issue#assignable_users`. Version 0.3.39 also extends `IssueQuery#assigned_to_values` so those linked teams are available in Redmine's native **Assigned to** issue filter. Individual users receive the roles configured for them in the team.
 
 Unlinking is refused while open issues in the project are assigned to the team. Historical native groups are preserved during a full rollback so existing issue references are not broken.
 
@@ -55,7 +56,7 @@ The release was validated against Redmine 6.0.6, Ruby 3.3.8, Rails 7.2.2.1, and 
 3. Run the migration command shown above.
 4. Restart Redmine.
 
-When upgrading from 0.2.0, migration 004 removes the former base-role memberships while preserving individual memberships. Migration 006 reactivates legacy teams created before the active-state controls were removed.
+When upgrading from 0.2.0, migration 004 removes the former base-role memberships while preserving individual memberships. Migration 006 reactivates legacy teams created before the active-state controls were removed. Version 0.3.39 adds no new migration.
 
 ## REST API
 
@@ -95,4 +96,4 @@ Copyright holders license this project under the GNU General Public License vers
 
 ## Author
 
-Roger Gama
+[Roger Gama](https://github.com/rogerlgama)
