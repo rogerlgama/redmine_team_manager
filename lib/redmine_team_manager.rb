@@ -8,6 +8,7 @@ end
 
 require_relative 'redmine_team_manager/patches/project_patch'
 require_relative 'redmine_team_manager/patches/issue_patch'
+require_relative 'redmine_team_manager/patches/issue_query_patch'
 require_relative 'redmine_team_manager/patches/members_helper_patch'
 require_relative 'redmine_team_manager/patches/application_helper_patch'
 require_relative 'redmine_team_manager/patches/members_controller_patch'
@@ -19,6 +20,7 @@ module RedmineTeamManager
     patch_map = {
       'Project' => RedmineTeamManager::Patches::ProjectPatch,
       'Issue' => RedmineTeamManager::Patches::IssuePatch,
+      'IssueQuery' => RedmineTeamManager::Patches::IssueQueryPatch,
       'MembersHelper' => RedmineTeamManager::Patches::MembersHelperPatch,
       'ApplicationHelper' => RedmineTeamManager::Patches::ApplicationHelperPatch,
       'MembersController' => RedmineTeamManager::Patches::MembersControllerPatch
