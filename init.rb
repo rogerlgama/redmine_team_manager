@@ -7,7 +7,7 @@ Redmine::Plugin.register :redmine_team_manager do
   author 'Roger Gama'
   author_url 'https://github.com/rogerlgama'
   description 'Gerencia times com papéis individuais e atribuição coletiva sem papel-base para o Time.'
-  version '0.3.38'
+  version '0.3.39'
   url 'https://github.com/rogerlgama/redmine_team_manager'
   requires_redmine version_or_higher: '6.0.0'
 
